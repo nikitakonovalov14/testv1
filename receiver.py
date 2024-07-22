@@ -19,10 +19,12 @@ def get_ip():
 
 def get_port(HOST):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0)
     for PORT in range(8080, 9090):
+        print(PORT)
         try:
-            s.connect((HOST, PORT))
+            s.bind((HOST, PORT))
+            s.listen(5)
+            s.close()
             return PORT
         except:
             continue
@@ -30,7 +32,7 @@ def get_port(HOST):
 
 
 HOST = get_ip()
-PORT = get_port(HOST)
+PORT = get_port('127.0.0.1')
 print(f'HOST: {HOST}\nPORT: {PORT}')
 p = Protocol((HOST, PORT), '')
 p.bind()
