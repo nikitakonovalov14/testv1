@@ -19,7 +19,6 @@ class Protocol:
         self.socket.bind(self.local_addr)
         self.socket.listen()
         self.conn, addr = self.socket.accept()
-        print(addr)
 
     def send(self, data: bytes):
         return self.socket.send(data)

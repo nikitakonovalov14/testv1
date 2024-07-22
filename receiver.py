@@ -20,7 +20,6 @@ def get_ip():
 def get_port(HOST):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     for PORT in range(8080, 9090):
-        print(PORT)
         try:
             s.bind((HOST, PORT))
             s.listen(5)
