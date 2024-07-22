@@ -1,10 +1,40 @@
 from protocol import *
+import socket
+import time
 
-HOST = "127.0.0.1"
-PORT = 65445
-p = Protocol((HOST,PORT), '')
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        # doesn't even have to be reachable
+        s.connect(("8.8.8.8", 80))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+
+def get_port(HOST):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(0)
+    for PORT in range(8080, 9090):
+        try:
+            s.connect((HOST, PORT))
+            return PORT
+        except:
+            continue
+    raise Exception('no available port found')
+
+
+HOST = get_ip()
+PORT = get_port(HOST)
+print(f'HOST: {HOST}\nPORT: {PORT}')
+p = Protocol((HOST, PORT), '')
 p.bind()
-
 pac = Packet(b'')
 pac.recv(p)
-print(len(pac.data.decode('utf-8')))
+print(f'Message: {pac.data.decode("utf-8")}')
+time.sleep(10)
