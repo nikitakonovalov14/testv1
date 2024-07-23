@@ -32,10 +32,12 @@ def get_port(HOST):
 
 HOST = get_ip()
 PORT = get_port('127.0.0.1')
+# HOST = "127.0.0.1"
+# PORT = 65432
 print(f'HOST: {HOST}\nPORT: {PORT}')
-p = Protocol((HOST, PORT), '')
-p.bind()
-pac = Packet(b'')
-pac.recv(p)
-print(f'Message: {pac.data.decode("utf-8")}')
+protocol = Protocol((HOST, PORT), '')
+protocol.bind()
+package = Packet(b'')
+package.recv(protocol)
+print(f'Message: {len(package.data.decode("utf-8"))}')
 time.sleep(10)

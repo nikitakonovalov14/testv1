@@ -29,7 +29,7 @@ class Protocol:
         return msg
 
     def can_recv(self):
-        return select.select([self.conn], [], [], 0.01)[0]
+        return select.select([self.conn], [], [], 0.000000001)[0]
 
 
 class Packet:

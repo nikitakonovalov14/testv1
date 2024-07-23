@@ -1,12 +1,8 @@
 import math
-import random
-
 import pyaudio
 from matplotlib.animation import FuncAnimation
-
 from protocol import *
 import socket
-import time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -49,16 +45,16 @@ def get_port(HOST):
 HOST = get_ip()
 PORT = get_port('127.0.0.1')
 print(f'HOST: {HOST}\nPORT: {PORT}')
-p = Protocol((HOST, PORT), '')
-p.bind()
-pac = Packet(b'')
-pac.recv(p)
-info = np.frombuffer(pac.data, dtype=np.int16)
+protocol = Protocol((HOST, PORT), '')
+protocol.bind()
+package = Packet(b'')
+package.recv(protocol)
 
-xdata, data = np.zeros(100), np.zeros(RATE * 5)
+shift = math.ceil(DATALEN * interval / 1000) + 1500
+info = np.frombuffer(package.data, dtype=np.int16)
+data = np.zeros(RATE * 5)
 fig, ax = plt.subplots(figsize=(8, 4))
 ln, = ax.plot(data, color=(0, 1, 0.29))
-shift = math.ceil(DATALEN * interval / 1000) + 1500
 ax.set_facecolor((0, 0, 0))
 ax.set_yticks([0])
 ax.yaxis.grid(True)
@@ -71,11 +67,11 @@ def init():
 
 def update(frame):
     global data, info
-    if p.can_recv() or len(info) < shift:
+    if protocol.can_recv() or len(info) < shift:
         if (len(info) > shift):
             print(f'!!!!TRAILING DATA len:{len(info)}')
-        pac.recv(p)
-        info = np.frombuffer(pac.data, dtype=np.int16)
+        package.recv(protocol)
+        info = np.frombuffer(package.data, dtype=np.int16)
     data = np.roll(data, -shift, axis=0)
     data[-shift:] = info[:shift]
     info = info[shift:]
@@ -83,7 +79,7 @@ def update(frame):
     return ln,
 
 
-ani = FuncAnimation(fig, update, #frames=10000000,
+ani = FuncAnimation(fig, update,  # frames=10000000,
                     interval=interval,
                     init_func=init, blit=True)
 plt.show()
