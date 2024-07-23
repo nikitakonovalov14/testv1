@@ -49,8 +49,6 @@ def get_port(HOST):
 HOST = get_ip()
 PORT = get_port('127.0.0.1')
 print(f'HOST: {HOST}\nPORT: {PORT}')
-HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 65438  # The port used by the server
 p = Protocol((HOST, PORT), '')
 p.bind()
 pac = Packet(b'')

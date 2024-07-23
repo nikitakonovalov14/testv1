@@ -19,10 +19,8 @@ stream = p.open(format=FORMAT,
                 rate=RATE,
                 input=True,
                 frames_per_buffer=CHUNK)
-# HOST = input("HOST: ")
-# PORT = int(input("PORT: "))
-HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 65438  # The port used by the server
+HOST = input("HOST: ")
+PORT = int(input("PORT: "))
 p = Protocol('', (HOST, PORT))
 p.connect()
 while True:
