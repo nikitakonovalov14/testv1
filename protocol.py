@@ -1,3 +1,4 @@
+import select
 import socket
 
 
@@ -27,6 +28,9 @@ class Protocol:
         msg, addr = self.conn.recvfrom(n)
         return msg
 
+    def can_recv(self):
+        return select.select([self.conn], [], [], 0.01)[0]
+
 
 class Packet:
     def __init__(self, data: bytes):
@@ -44,7 +48,7 @@ class Packet:
     def disassemble(self, header: bytes):
         self.size = int.from_bytes(header[0:4], 'big')
 
-    def send(self, protocol: Protocol):
+    async def send(self, protocol: Protocol):
         size = 0
         while size < self.size:
             n = protocol.send(self.assembled[size:])
@@ -72,5 +76,4 @@ class Packet:
                     raise EOFError(f'connection closed before full message receive')
             size += len(msg)
             self.data += msg
-        protocol.close()
         return True
